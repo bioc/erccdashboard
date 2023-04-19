@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.33.1
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES / BUG FIX
+    o Vignette output showed incorrect mRNA fraction estimates and incorrect LODR estimates due to the stringsAsFactors=FALSE switch with R > 4.0. Ratio values were not being treated as factors in the loadERCCInfo function and this was causing incorrect ratio value assignments in the est_r_m.R function. The issue has been resolved by an explicit as.factor assignment in the loadERCCInfo.R function.
+    
 CHANGES IN VERSION 1.13.1
 -------------------------
 
