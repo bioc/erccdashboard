@@ -125,7 +125,7 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     NBdisptrend<-d2$trended.dispersion
     names(NBdisptrend)<-rownames(rbind(cnt,simcnt))
   
-    use.fit <- glmQLFit(d2, design)
+    use.fit <- glmQLFit(d2, design,legacy=TRUE)
     
     qlf.res <- glmQLFTest(use.fit)
     
