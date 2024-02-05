@@ -174,7 +174,7 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     ## change estimates
     adj <- r_m.mn #### Use r_m estimated from NegBin GLM
     use.fit.adj <- glmQLFit(cnt[ERCC,], design, dispersion = NBdisptrend[ERCC],
-                            offset = log.offset - rep(c(adj,0),each=ncol(cnt)/2))
+                            offset = log.offset - rep(c(adj,0),each=ncol(cnt)/2),legacy = TRUE)
     est.FC.adj<-use.fit.adj$coefficients[ERCC,2]
     
     use.fit3<-use.fit2

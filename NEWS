@@ -1,7 +1,7 @@
-CHANGES IN VERSION 1.37.1
+CHANGES IN VERSION 1.37.2
 -------------------------
 BUG FIXES AND MINOR IMPROVEMENTS
-  o Added legacy=TRUE for glmQLFit() function from edgeR to maintain behavior equivalent to results with Bioconductor 3.16, rather than using the new method of adjustment for small counts from edgeR that was introduced in Bioconductor 3.18 (legacy = FALSE by default)
+  o Added legacy=TRUE for glmQLFit() function from edgeR to maintain behavior equivalent to results with Bioconductor 3.16, rather than using the new method of adjustment for small counts from edgeR that was introduced in Bioconductor 3.18 (legacy = FALSE by default). Changes to the glmQLFit function in edgeR seem to be causing slight changes to dispersion results even with legacy=TRUE.
 
 CHANGES IN VERSION 1.33.1
 -------------------------
