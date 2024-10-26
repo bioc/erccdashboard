@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.39.1
+-------------------------
+  o Depends on R > 4.0
+  o Converted from Sweave PDF vignette to Rmarkdown HTML.
+  
 CHANGES IN VERSION 1.37.2
 -------------------------
 BUG FIXES AND MINOR IMPROVEMENTS

@@ -12,7 +12,10 @@ import(ROCR)
 import(plyr)
 import(scales)
 import(stringr)
-importFrom(qvalue, qvalue)
+import(knitr)
+importFrom("qvalue", "qvalue")
+importFrom("graphics", "par")
+importFrom("utils","packageDescription")
 importFrom("grDevices", "dev.off", "jpeg", "pdf", "png")
 importFrom("stats", "IQR", "coef", "fivenum", "lm", "loess",
            "model.matrix", "optimize", "predict", "preplot", "qnorm",
