@@ -1,9 +1,9 @@
-CHANGES IN VERSION 1.39.2
+CHANGES IN VERSION 1.39.5
 -------------------------
   o Depends on R > 4.0
   o Converted from Sweave PDF vignette to Rmarkdown HTML.
   o Updating testDECount.R to handle changes made in edgeR
-  o Updating saveERCCPlots.R for NULL args and commented out one example 
+  o Updating saveERCCPlots.R to deal with grob error 
   
 CHANGES IN VERSION 1.37.2
 -------------------------
