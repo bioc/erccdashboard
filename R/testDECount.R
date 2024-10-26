@@ -23,7 +23,7 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     rownames(cnt)<-Features
     cnt<-as.matrix(cnt[,-1])
     
-    if(odd(ncol(cnt))) stop(paste("Uneven number of replicates for",
+    if(gtools::odd(ncol(cnt))) stop(paste("Uneven number of replicates for",
                                   "the two sample types"))
     
     colnames(cnt)<-paste(rep(c(sample1,sample2),
@@ -32,6 +32,7 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     
     ## Get ERCC names
     ERCC<-rownames(cnt[substr(rownames(cnt),1,5)=="ERCC-",])
+    ERCCidx <- which(substr(rownames(cnt),1,5)=="ERCC-")
     
     ## Specify Sample (A or B)
     trt<-rep(1:2,each=ncol(cnt)/2)
@@ -157,9 +158,12 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     use.fit2$offset <- use.fit2$offset[1:nrow(cnt),]
     use.fit2$dispersion <- use.fit2$dispersion[1:nrow(cnt)]
     use.fit2$AveLogCPM <- use.fit2$AveLogCPM[1:nrow(cnt)]
+    use.fit2$weights <- use.fit2$weights[1:nrow(cnt),]
     use.fit2$df.residual.zeros <- use.fit2$df.residual.zeros[1:nrow(cnt)]
-    use.fit2$var.post <- use.fit2$var.post[1:nrow(cnt)]
-    use.fit2$var.prior <- use.fit2$var.prior[1:nrow(cnt)]
+    #use.fit2$var.post <- use.fit2$var.post[1:nrow(cnt)]
+    #use.fit2$var.prior <- use.fit2$var.prior[1:nrow(cnt)]
+    use.fit2$s2.prior <- use.fit2$s2.prior[1:nrow(cnt)]
+    use.fit2$s2.post <- use.fit2$s2.post[1:nrow(cnt)]
     
     use.res2 <- glmQLFTest(use.fit2)
     
@@ -174,21 +178,24 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     ## change estimates
     adj <- r_m.mn #### Use r_m estimated from NegBin GLM
     use.fit.adj <- glmQLFit(cnt[ERCC,], design, dispersion = NBdisptrend[ERCC],
-                            offset = log.offset - rep(c(adj,0),each=ncol(cnt)/2),legacy = TRUE)
+                            offset = log.offset - rep(c(adj,0),each=ncol(cnt)/2),
+                            legacy = TRUE)
     est.FC.adj<-use.fit.adj$coefficients[ERCC,2]
     
     use.fit3<-use.fit2
     # Substitute ERCC centered data into full use.fit3 structure
-    use.fit3$coefficients[ERCC,] <- use.fit.adj$coefficients[ERCC,]
-    use.fit3$unshrunk.coefficients[ERCC,] <- use.fit.adj$unshrunk.coefficients[ERCC,]
-    use.fit3$var.prior[ERCC] <- use.fit.adj$var.prior[ERCC]
-    use.fit3$var.post[ERCC] <- use.fit.adj$var.post[ERCC]
-    
+    use.fit3$coefficients[ERCCidx,] <- use.fit.adj$coefficients[ERCCidx,]
+    use.fit3$unshrunk.coefficients[ERCCidx,] <- use.fit.adj$unshrunk.coefficients[ERCCidx,]
+    #use.fit3$var.prior[ERCC] <- use.fit.adj$var.prior[ERCC]
+    #use.fit3$var.post[ERCC] <- use.fit.adj$var.post[ERCC]
+    use.fit3$s2.post[ERCCidx] <- use.fit.adj$s2.post[ERCCidx]
+    use.fit3$s2.prior[ERCCidx] <- use.fit.adj$s2.prior[ERCCidx]
+    use.fit3$weights[ERCCidx,] <- use.fit.adj$weights[ERCCidx,]
     # deal with CompressedMatrix format to add the new ercc offsets...
-    expandedfit3 <- expandAsMatrix(use.fit3$offset)
-    expandedfit3[1:length(ERCC),] <- expandAsMatrix(use.fit.adj$offset)
-    recompress <- makeCompressedMatrix(expandedfit3)
-    use.fit3$offset <- recompress
+    #expandedfit3 <- expandAsMatrix(use.fit3$offset)
+    #expandedfit3[1:length(ERCC),] <- expandAsMatrix(use.fit.adj$offset)
+    #recompress <- makeCompressedMatrix(expandedfit3)
+    #use.fit3$offset <- recompress
     
     use.res.adj<-glmQLFTest(use.fit3)
      
@@ -198,7 +205,7 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
     #replace with edgeR results
     Pval <- use.res.adj$table$PValue
     LogPval <- log10(use.res.adj$table$PValue)
-    Qval <- qvalue(Pval)$qvalues
+    Qval <- qvalue::qvalue(Pval)$qvalues
     F.stat <- use.res.adj$table$F
     
     names(Qval)<-names(F.stat)<-names(LogPval)<-names(Pval)<-rownames(cnt)
@@ -241,33 +248,44 @@ testDECount <- function(sampleInfo, exDat, cnt = cnt, info = info){
       glmfit <- use.fit
       xlab = "Average Log2 CPM (Counts per million)"
       ylab = "Squeezed QL Dispersion Estimates (Quarter-Root Mean Deviance)"
-      
+      if (is.null(glmfit$s2.post)) 
+        stop("need to run glmQLFit before plotQLDisp")
       A <- glmfit$AveLogCPM
-    
       if (is.null(A)) 
         A <- aveLogCPM(glmfit)
-      s2 <- glmfit$deviance/glmfit$df.residual.zeros
-      if (is.null(glmfit$var.post)) {
-        stop("need to run glmQLFit before getting QL dispersion estimates")
+      if (is.null(glmfit$df.residual.zeros)) {
+        df.residual <- glmfit$df.residual.adj
+        deviance <- glmfit$deviance.adj
+      }else{
+        df.residual <- glmfit$df.residual.zeros
+        deviance <- glmfit$deviance
       }
-      
-      squeezedDisp <- data.frame(A = A, Dispersion = sqrt(sqrt(glmfit$var.post)))
-      dispERCC <- squeezedDisp[ERCC,]
+      s2 <- deviance/df.residual
+      s2[df.residual < 1e-08] <- 0
+      # if (is.null(A)) 
+      #   A <- aveLogCPM(glmfit)
+      #   s2 <- glmfit$deviance/glmfit$df.residual.zeros
+      # if (is.null(glmfit$s2.post)) {
+      #   stop("need to run glmQLFit before getting QL dispersion estimates")
+      # }
+      #p1 <- dev.off(plotQLDisp(glmfit))
+      squeezedDisp <- data.frame(A = A, Dispersion = sqrt(sqrt(s2)))
+      dispERCC <- squeezedDisp[ERCCidx,]
       dispERCC$Ratio <- ERCC.Ratio[ERCC,2]
       
-      if (length(glmfit$var.prior) == 1L) {
-        trendPlot <- geom_abline(yintercept = sqrt(sqrt(glmfit$var.prior)))
+      if (length(glmfit$s2.prior) == 1L) {
+        trendPlot <- geom_abline(yintercept = glmfit$s2.prior)
       } else {
         o <- order(A)
-        dispTrend <- data.frame(Atrend = A[o], Dispersion = sqrt(sqrt(glmfit$var.prior[o])) )
-        trendPlot <-  geom_line(data = dispTrend, aes(Atrend, Dispersion))
+        dispTrend <- data.frame(Atrend = A[o], Dispersion = sqrt(sqrt(s2))[o])
+        trendPlot <-  geom_line(data = dispTrend, aes(x=Atrend, y=Dispersion))
       }
       quasiDispPlot <- ggplot() + geom_point(data = squeezedDisp, aes(x = A, y = Dispersion),
                                              colour = "grey80", size = 5,
                                              alpha = 0.6) +
         geom_point(data = dispERCC, aes(x = A, y = Dispersion,colour = Ratio), 
                    size = 5, alpha = 0.6) + xlab(xlab) + ylab(ylab) +
-        trendPlot +
+        #trendPlot +
         #scale_x_log10() + 
         colScale + theme_bw() +
         theme(legend.justification=c(1,1), legend.position=c(0.9,0.9)) 

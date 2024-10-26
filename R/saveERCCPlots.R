@@ -56,26 +56,26 @@
 #' 
 #' @export
 
-saveERCCPlots<-function(exDat, plotsPerPg = "main", saveas = "pdf", outName,
-                        plotlist, res){
+saveERCCPlots<-function(exDat, plotsPerPg = "main", saveas = "pdf", outName = NULL,
+                        plotlist, res = 200){
     # Options are either the default of printing the plots as shown in 
     # the erccdashboard 2014 Nature Communications publication 
     # (plotsPerPg = "main" and plotlist is NULL) or 
     # to print plots one per page choose plotsPerPg = "single" and provide any
     # list of plots as the plotlist arguement
     
-    if(missing(plotsPerPg)){
+    if(is.null(plotsPerPg)){
         plotsPerPg <- "main"
         cat(paste0("\nSaving main dashboard plots to ",saveas," file...\n"))
     }
-    if(missing(saveas)){
+    if(is.null(saveas)){
         saveas <- "pdf"
         cat("Printing to PDF...")
     }
-    if(missing(outName)){
+    if(is.null(outName)){
         outName <- exDat$sampleInfo$filenameRoot
     }
-    if(missing(res)) res = 200
+    if(is.null(res)) res = 200
     if (plotsPerPg == "main"){
         cols = 2
         nFigs = 4
