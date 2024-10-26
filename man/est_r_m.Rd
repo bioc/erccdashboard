@@ -34,4 +34,3 @@ exDat <- initDat(datType="count", isNorm = FALSE, exTable=MET.CTL.countDat,
 exDat <- est_r_m(exDat)
 
 }
-

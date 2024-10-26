@@ -35,4 +35,3 @@ exDat <- dynRangePlot(exDat, allPoints="FALSE", labelReps ="FALSE")
 exDat$Figures$dynRangePlot
 
 }
-

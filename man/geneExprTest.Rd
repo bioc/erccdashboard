@@ -13,7 +13,7 @@ geneExprTest(exDat)
 Prepare differential expression testing results for spike-in analysis
 }
 \details{
-This function wraps the QuasiSeq differential expression testing package for
+This function wraps the edgeR differential expression testing package for
 datType = "count" or uses the limma package for differential expression 
 testing if datType = "array". Alternatively, for count data only, if
 correctly formatted DE test results are provided,
@@ -37,4 +37,3 @@ exDat <- dynRangePlot(exDat)
 exDat <- geneExprTest(exDat)
 
 }
-

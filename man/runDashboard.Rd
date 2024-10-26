@@ -4,11 +4,23 @@
 \alias{runDashboard}
 \title{Run default erccdashboard analysis of ERCC control ratio mixtures}
 \usage{
-runDashboard(datType = NULL, isNorm = FALSE, exTable = NULL,
-  repNormFactor = NULL, filenameRoot = NULL, sample1Name = NULL,
-  sample2Name = NULL, erccmix = "RatioPair", erccdilution = 1,
-  spikeVol = 1, totalRNAmass = 1, choseFDR = 0.05, ratioLim = c(-4, 4),
-  signalLim = c(-14, 14), userMixFile = NULL)
+runDashboard(
+  datType = NULL,
+  isNorm = FALSE,
+  exTable = NULL,
+  repNormFactor = NULL,
+  filenameRoot = NULL,
+  sample1Name = NULL,
+  sample2Name = NULL,
+  erccmix = "RatioPair",
+  erccdilution = 1,
+  spikeVol = 1,
+  totalRNAmass = 1,
+  choseFDR = 0.05,
+  ratioLim = c(-4, 4),
+  signalLim = c(-14, 14),
+  userMixFile = NULL
+)
 }
 \arguments{
 \item{datType}{type is "count" (RNA-Seq) or "array" (microarray),
@@ -66,7 +78,7 @@ Run default erccdashboard analysis of ERCC control ratio mixtures
 }
 \examples{
 
-\donttest{
+\dontrun{
 data(SEQC.Example)
      
 exDat <- runDashboard(datType = "count",isNorm = FALSE,
@@ -80,4 +92,3 @@ summary(exDat)
 }
 
 }
-

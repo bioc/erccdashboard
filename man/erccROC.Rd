@@ -34,4 +34,3 @@ exDat <- erccROC(exDat)
 exDat$Figures$rocPlot
 
 }
-

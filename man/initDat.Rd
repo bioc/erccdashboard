@@ -4,11 +4,23 @@
 \alias{initDat}
 \title{Initialize the exDat list}
 \usage{
-initDat(datType = NULL, isNorm = FALSE, exTable = NULL,
-  repNormFactor = NULL, filenameRoot = NULL, sample1Name = NULL,
-  sample2Name = NULL, erccmix = "RatioPair", erccdilution = 1,
-  spikeVol = 1, totalRNAmass = 1, choseFDR = 0.05, ratioLim = c(-4, 4),
-  signalLim = c(-14, 14), userMixFile = NULL)
+initDat(
+  datType = NULL,
+  isNorm = FALSE,
+  exTable = NULL,
+  repNormFactor = NULL,
+  filenameRoot = NULL,
+  sample1Name = NULL,
+  sample2Name = NULL,
+  erccmix = "RatioPair",
+  erccdilution = 1,
+  spikeVol = 1,
+  totalRNAmass = 1,
+  choseFDR = 0.05,
+  ratioLim = c(-4, 4),
+  signalLim = c(-14, 14),
+  userMixFile = NULL
+)
 }
 \arguments{
 \item{datType}{type is "count" or "array", unnormalized data is
@@ -82,4 +94,3 @@ summary(exDat)
                                         
 
 }
-

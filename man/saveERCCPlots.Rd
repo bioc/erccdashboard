@@ -4,8 +4,14 @@
 \alias{saveERCCPlots}
 \title{Save erccdashboard plots to a pdf file}
 \usage{
-saveERCCPlots(exDat, plotsPerPg = "main", saveas = "pdf", outName, plotlist,
-  res)
+saveERCCPlots(
+  exDat,
+  plotsPerPg = "main",
+  saveas = "pdf",
+  outName = NULL,
+  plotlist = NULL,
+  res = 200
+)
 }
 \arguments{
 \item{exDat}{list, contains input data and stores analysis results}
@@ -30,7 +36,7 @@ individual page. If plotlist is not defined (plotlist = NULL) or
 if plotlist = exDat$Figures then all plots in exDat$Figures are printed to a PDF file.
 }
 \examples{
-\donttest{
+\dontrun{
 data(SEQC.Example)
  
 exDat <- initDat(datType="count", isNorm=FALSE, exTable=MET.CTL.countDat, 
@@ -52,20 +58,16 @@ exDat <- estLODR(exDat, kind="ERCC", prob=0.9)
 exDat <- annotLODR(exDat)
 
 #to print 4 main plots to a single page pdf file
-saveERCCPlots(exDat, plotsPerPg = "manuscript",saveas = "pdf")
+saveERCCPlots(exDat, plotsPerPg = "main",saveas = "pdf")
 
 #to print 4 plots to a jpeg file
-saveERCCPlots(exDat, plotsPerPg = "manuscript",saveas = "jpeg")
+saveERCCPlots(exDat, plotsPerPg = "main",saveas = "jpeg")
 
 # or to create a multiple page pdf of all plots produced
 saveERCCPlots(exDat, plotsPerPg = "single", plotlist = exDat$Figures)
 
-# or to create a multiple page pdf of just 2 plots
-saveERCCPlots(exDat, plotsPerPg = "single", 
-              plotlist = list(exDat$Figures$lodrPlot, exDat$Figures$maPlot))
 
 }
 
 
 }
-

@@ -2,7 +2,7 @@ Package: erccdashboard
 Type: Package
 Title: Assess Differential Gene Expression Experiments with ERCC
         Controls
-Version: 1.39.3
+Version: 1.39.4
 Author: Sarah Munro, Steve Lund
 Maintainer: Sarah Munro <sarah.munro@gmail.com>
 Description: Technical performance metrics for differential gene expression
@@ -57,3 +57,5 @@ LazyData: yes
 VignetteBuilder: knitr
 Suggests: BiocStyle, knitr, rmarkdown
 Packaged: 2014-09-29 02:40:01 UTC; smunro
+Encoding: UTF-8
+RoxygenNote: 7.3.2

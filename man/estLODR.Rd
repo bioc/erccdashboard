@@ -42,4 +42,3 @@ exDat <- estLODR(exDat, kind = "ERCC", prob = 0.9)
 exDat$Figures$lodrERCCPlot
 
 }
-

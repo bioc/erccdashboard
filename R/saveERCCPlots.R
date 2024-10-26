@@ -17,7 +17,7 @@
 #' if plotlist = exDat$Figures then all plots in exDat$Figures are printed to a PDF file.
 #' 
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' data(SEQC.Example)
 #'  
 #' exDat <- initDat(datType="count", isNorm=FALSE, exTable=MET.CTL.countDat, 
@@ -39,10 +39,10 @@
 #' exDat <- annotLODR(exDat)
 #' 
 #' #to print 4 main plots to a single page pdf file
-#' saveERCCPlots(exDat, plotsPerPg = "manuscript",saveas = "pdf")
+#' saveERCCPlots(exDat, plotsPerPg = "main",saveas = "pdf")
 #' 
 #' #to print 4 plots to a jpeg file
-#' saveERCCPlots(exDat, plotsPerPg = "manuscript",saveas = "jpeg")
+#' saveERCCPlots(exDat, plotsPerPg = "main",saveas = "jpeg")
 #' 
 #' # or to create a multiple page pdf of all plots produced
 #' saveERCCPlots(exDat, plotsPerPg = "single", plotlist = exDat$Figures)
@@ -97,27 +97,22 @@ saveERCCPlots<-function(exDat, plotsPerPg = "main", saveas = "pdf", outName = NU
     if (plotsPerPg == "single"){
         pwidth = 7
         pheight = 7
-        if (missing(plotlist)){
+        
+        
+        if (is.null(plotlist)){
             plotlist = exDat$Figures
         }
-        if(is.list(plotlist)){           
-            nPlotsSum <- dim(summary(plotlist))[1]
-            nPlotsLength <- length(plotlist)
-            if(nPlotsSum == nPlotsLength){
-                if(saveas != "pdf") cat("Ignoring \"saveas\" = \"",saveas,"\"\n")
-                cat("Printing plots to multiple pages in one PDF file.\n")
-                m1 <- marrangeGrob(grobs = plotlist,ncol = 1, nrow = 1,top = NULL)
-                pdf(file=paste(outName,"pdf",sep="."),
-                   onefile=TRUE,width=pwidth,
-                   height=pheight)
-                par(ask=FALSE)
-                #ggsave(paste0(outName,".pdf"), m1)
-                print(m1)
-                dev.off()
-            }
-        }else{
-            stop(cat("\"plotlist\" is not a list! ")) 
-        }    
+        pdf(file=paste(outName,"pdf",sep="."),
+                        onefile=TRUE,width=pwidth,
+                        height=pheight)
+          grid.arrange(exDat$Figures$r_mPlot)
+          grid.arrange(exDat$Figures$dynRangePlot)
+          grid.arrange(exDat$Figures$rangeResidPlot)
+          grid.arrange(exDat$Figures$rocPlot)
+          grid.arrange(exDat$Figures$lodrERCCPlot)
+          grid.arrange(exDat$Figures$maPlot)
+        
+        dev.off()
     }
-
+  
 }

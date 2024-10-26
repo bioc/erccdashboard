@@ -40,7 +40,7 @@
 #' @export
 #' @examples
 #' 
-#' \donttest{
+#' \dontrun{
 #' data(SEQC.Example)
 #'      
 #' exDat <- runDashboard(datType = "count",isNorm = FALSE,
@@ -106,7 +106,7 @@ runDashboard <- function(datType=NULL, isNorm = FALSE,
     
     ### Saving plots and results
     # Convenience function to save 4 main figures to file
-    saveERCCPlots(exDat,saveas = "pdf")
+    saveERCCPlots(exDat,plotlist = "main", saveas = "pdf")
     
     
     # Save exDat to a RData file for later use

@@ -35,4 +35,3 @@ exDat <- annotLODR(exDat)
 exDat$Figures$maPlot
 }
 }
-
