@@ -47,9 +47,6 @@
 #' # or to create a multiple page pdf of all plots produced
 #' saveERCCPlots(exDat, plotsPerPg = "single", plotlist = exDat$Figures)
 #' 
-#' # or to create a multiple page pdf of just 2 plots
-#' saveERCCPlots(exDat, plotsPerPg = "single", 
-#'               plotlist = list(exDat$Figures$lodrPlot, exDat$Figures$maPlot))
 #' 
 #' }
 #' 
@@ -57,7 +54,7 @@
 #' @export
 
 saveERCCPlots<-function(exDat, plotsPerPg = "main", saveas = "pdf", outName = NULL,
-                        plotlist, res = 200){
+                        plotlist = NULL, res = 200){
     # Options are either the default of printing the plots as shown in 
     # the erccdashboard 2014 Nature Communications publication 
     # (plotsPerPg = "main" and plotlist is NULL) or 
